@@ -1,4 +1,5 @@
 #!/bin/bash
+rm output.txt
 cd other
 rm -rf build
 cd ..
