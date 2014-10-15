@@ -1,4 +1,7 @@
 #include <vector>
+#include <iostream>
+#include <iomanip>
+#include <limits>
 #include <omp.h>
 
 int main() {
@@ -6,23 +9,26 @@ int main() {
     double x;
     double step = 1.0 / (double) numSteps;
     int i, begin, end, chunksize;
-    double sum[40];
-    for(i = 0; i < 40; ++i)
-        sum[i] = 0;
+    double sum = 0, localSum;
 
-    #pragma omp parallel private(begin, end, chunksize, i)
+    #pragma omp parallel private(begin, end, chunksize, i, localSum, x)
     {
         chunksize = numSteps / omp_get_num_threads();
         begin = omp_get_thread_num() * chunksize;
         end = begin + chunksize;
+        localSum = 0;
+
         for(i = begin; i < end; i++) {
             x = (i - 0.5) * step;
-            sum[omp_get_thread_num()] += 4.0 / (1.0 + x * x);
+            localSum += 4.0 / (1.0 + x * x);
         }
+
+        #pragma omp critical
+        sum += localSum;
     }
 
-    for(i = 1; i < 40; ++i) {
-        sum[0] += sum[i];
-    }
-    double pi = step * sum[0];
+
+    double pi = step * sum;
+    std::cout << std::setprecision(std::numeric_limits<double>::digits10) <<
+        pi << std::endl;
 }
