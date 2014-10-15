@@ -19,13 +19,11 @@ reduction: Maakt gebruik van parallel for reduction.
 other: Gebruikt parallel met een toegewezen chunk van de for door deze in te
 delen in omp_get_num_threads() delen. Achteraf werd er accumulatie gedaan.
 
+In alle versies wordt er gewerkt met 100,000,000 iteraties.
+
 
 -- RESULTATEN --
 
-parfor 121800 ms totaal -> 4060 ms gemiddeld.
-reduction 1300 ms totaal -> 43 ms gemiddeld.
-other 121380 ms totaal -> 4046 ms gemiddeld.
-
-Ik merk op dat parfor en other tot 5 maal sneller draaien op mijn persoonlijke
-computer, ik denk dat dit komt door het gesplitste geheugen tussen de twee
-fysieke processoren op de supercomputer.
+parfor 1810 ms totaal -> 60.3 ms gemiddeld.
+reduction 1780 ms totaal -> 59.3 ms gemiddeld.
+other 1770 ms totaal -> 59 ms gemiddeld.
