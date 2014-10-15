@@ -24,6 +24,6 @@ In alle versies wordt er gewerkt met 100,000,000 iteraties.
 
 -- RESULTATEN --
 
-parfor 1810 ms totaal -> 60.3 ms gemiddeld.
-reduction 1780 ms totaal -> 59.3 ms gemiddeld.
-other 1770 ms totaal -> 59 ms gemiddeld.
+parfor 1650 ms totaal -> 55.0 ms gemiddeld.
+reduction 1760 ms totaal -> 58.7 ms gemiddeld.
+other 1680 ms totaal -> 56.0 ms gemiddeld.
