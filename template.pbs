@@ -28,4 +28,5 @@
 # showstart <id>                          | show earliest start time
 
 cd $PBS_O_WORKDIR
-echo "Hello, world!"
+echo "Running program"
+time -p for i in {1..30}; do ./program; done
