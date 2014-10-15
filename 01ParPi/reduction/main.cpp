@@ -13,6 +13,4 @@ int main() {
     }
 
     double pi = step * sum;
-
-    std::cout << pi << std::endl;
 }

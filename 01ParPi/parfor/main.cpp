@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 #include <numeric>
 #include <omp.h>
@@ -18,5 +17,4 @@ int main() {
     }
 
     double pi = step * std::accumulate(sum.begin(), sum.end(), 0);
-    std::cout << pi << std::endl;
 }

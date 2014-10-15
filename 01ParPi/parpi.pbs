@@ -1,0 +1,48 @@
+#!/bin/bash -l
+#PBS -l nodes=1:ppn=20 
+#PBS -l walltime=00:05:00
+#PBS -l mem=5gb
+#PBS -m abe
+#PBS -M randy.thiemann@student.uhasselt.be
+#PBS -A llp_h_pds
+
+#Arguments:
+# -l walltime=hh:mm:ss                    | timeout
+# -l nodes=x:ppn=y                        | x nodes at y processors per node
+# -l mem=xgb                              | x gb of ram
+# -N name                                 | job name
+# -j oe                                   | join stdout (o) and stderr (e)
+# -m abe                                  | mail at abort, beginning, exit
+# -M randy.thiemann@student.uhasselt.be   | mail addr
+# -o stdout.txt                           | output file
+#
+#Env. Vars:
+# PBS_O_WORKDIR = dir from where job was submitted
+# PBS_JOBID = job id
+#
+#Commands:
+# qsub pbsfile.pbs                        | submit job
+# qdel <id>                               | delete job
+# qstat                                   | status of all jobs
+# checkjob <id>                           | job status
+# showstart <id>                          | show earliest start time
+
+cd $PBS_O_WORKDIR
+echo "Compiling..."
+cd parfor
+mkdir build
+cd build
+cmake ..
+make
+cd $PBS_O_WORKDIR
+cd reduction
+mkdir build
+cd build
+cmake ..
+make
+
+cd $PBS_O_WORKDIR
+echo "Running parfor"
+time -p for i in {1..30}; do ./parfor/build/parpi; done
+echo "Running reduction"
+time -p for i in {1..30}; do ./reduction/build/parpi; done
