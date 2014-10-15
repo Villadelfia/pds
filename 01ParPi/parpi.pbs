@@ -2,8 +2,10 @@
 #PBS -l nodes=1:ppn=20 
 #PBS -l walltime=00:05:00
 #PBS -l mem=5gb
+#PBS -j oe
 #PBS -m abe
 #PBS -M randy.thiemann@student.uhasselt.be
+#PBS -o output.txt
 #PBS -A llp_h_pds
 
 #Arguments:
@@ -33,13 +35,13 @@ cd parfor
 mkdir build
 cd build
 cmake ..
-make
+make -s
 cd $PBS_O_WORKDIR
 cd reduction
 mkdir build
 cd build
 cmake ..
-make
+make -s
 
 cd $PBS_O_WORKDIR
 echo "Running parfor"
