@@ -1,5 +1,3 @@
-#include <iostream>
-
 int main() {
     long numSteps = 100000000;
     double x, sum = 0;

@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #PBS -l nodes=1:ppn=20 
 #PBS -l walltime=00:05:00
-#PBS -l mem=5gb
+#PBS -l mem=1gb
 #PBS -j oe
 #PBS -m abe
 #PBS -M randy.thiemann@student.uhasselt.be
@@ -35,19 +35,28 @@ cd parfor
 mkdir build
 cd build
 cmake ..
-make -s
+make
 cd $PBS_O_WORKDIR
 cd reduction
 mkdir build
 cd build
 cmake ..
-make -s
+make
+cd $PBS_O_WORKDIR
+cd other
+mkdir build
+cd build
+cmake ..
+make
 
 cd $PBS_O_WORKDIR
 echo "Running parfor"
 time -p for i in {1..30}; do ./parfor/build/parpi; done
 echo "Running reduction"
 time -p for i in {1..30}; do ./reduction/build/parpi; done
+echo "Running other"
+time -p for i in {1..30}; do ./other/build/parpi; done
+
 
 cd $PBS_O_WORKDIR
 echo "Cleaning up..."
@@ -55,4 +64,7 @@ cd parfor
 rm -rf build
 cd $PBS_O_WORKDIR
 cd reduction
+rm -rf build
+cd $PBS_O_WORKDIR
+cd other
 rm -rf build
