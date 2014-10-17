@@ -31,9 +31,5 @@
 
 PBS_O_WORKDIR=${PBS_O_WORKDIR:='.'}
 cd $PBS_O_WORKDIR
-echo "Running parfor"
-time -p for i in {1..30}; do ./parfor/build/parpi; done
-echo "Running reduction"
-time -p for i in {1..30}; do ./reduction/build/parpi; done
-echo "Running other"
-time -p for i in {1..30}; do ./other/build/parpi; done
+echo "Running conv"
+time -p for i in {1..30}; do ./build/conv; done

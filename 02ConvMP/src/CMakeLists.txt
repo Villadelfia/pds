@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 #Project Name
-project(PARPI)
+project(CONV)
 
 # Compiler check
 set(COMPILE_FLAGS "-g3 -Os -Wextra -Wall -pedantic -pedantic-errors -std=c++11")
@@ -10,6 +10,7 @@ set(COMPILE_FLAGS "-g3 -Os -Wextra -Wall -pedantic -pedantic-errors -std=c++11")
 set(CMAKE_AUTOMOC ON)
 if(APPLE)
     FIND_PACKAGE(Qt5Gui REQUIRED)
+    FIND_PACKAGE(Qt5Core REQUIRED)
 else()
     FIND_PACKAGE(Qt4 REQUIRED)
     if(QT4_FOUND)
@@ -32,7 +33,7 @@ macro(executable n)
         add_executable(${n} ${ARGN})
         set_target_properties(${n} PROPERTIES COMPILE_FLAGS ${COMPILE_FLAGS})
         if(APPLE)
-            TARGET_LINK_LIBRARIES(${n} Qt5::Gui)
+            TARGET_LINK_LIBRARIES(${n} Qt5::Gui Qt5::Core)
         else()
             TARGET_LINK_LIBRARIES(${n} ${QT_LIBRARIES})
         endif()
@@ -42,4 +43,4 @@ macro(executable n)
 endmacro()
 
 #Executable
-executable(parpi main.cpp)
+executable(conv main.cpp)
