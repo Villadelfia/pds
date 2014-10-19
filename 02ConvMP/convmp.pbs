@@ -31,5 +31,33 @@
 
 PBS_O_WORKDIR=${PBS_O_WORKDIR:='.'}
 cd $PBS_O_WORKDIR
-echo "Running conv"
-time -p for i in {1..30}; do ./build/conv; done
+export OMP_SCHEDULE="dynamic,1"
+echo "Generating one of each input/kernel combination..."
+for kernel in data/kernel/*.png; do
+    export KERNELNAME=$(basename ${kernel})
+    export SETTINGS=$(cat data/kernel/params.txt | grep ${KERNELNAME})
+    export SETTINGS=(${SETTINGS//\ / })
+    for input in data/input/*; do
+        ./build/conv ${input} ${kernel} ${SETTINGS[1]} ${SETTINGS[2]}\
+            output/$(basename ${input} .png)-$(basename ${kernel} .png).png
+    done
+done
+echo "-----GENERATING DONE-----"
+
+echo "Starting the benchmark"
+echo "Running conv 30 times on a 31x31 kernel on big_building.png on every scheduler."
+echo "-----DYNAMIC BENCHMARK-----"
+export OMP_SCHEDULE="dynamic,1"
+time -p for i in {1..30}; do ./build/conv data/input/big_building.png data/kernel/echo.png 0 0 benchmark.png; done
+echo "-----END DYNAMIC BENCHMARK-----"
+
+echo "-----STATIC BENCHMARK-----"
+export OMP_SCHEDULE="static,1"
+time -p for i in {1..30}; do ./build/conv data/input/big_building.png data/kernel/echo.png 0 0 benchmark.png; done
+echo "-----END STATIC BENCHMARK-----"
+
+echo "-----GUIDED BENCHMARK-----"
+export OMP_SCHEDULE="guided,1"
+time -p for i in {1..30}; do ./build/conv data/input/big_building.png data/kernel/echo.png 0 0 benchmark.png; done
+echo "-----END GUIDED BENCHMARK-----"
+rm benchmark.png

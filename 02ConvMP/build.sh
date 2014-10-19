@@ -6,6 +6,7 @@ else
     OPTS='../src'
 fi
 
+mkdir output
 mkdir build
 cd build
 cmake $OPTS

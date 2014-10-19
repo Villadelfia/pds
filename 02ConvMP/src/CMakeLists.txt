@@ -43,4 +43,4 @@ macro(executable n)
 endmacro()
 
 #Executable
-executable(conv main.cpp)
+executable(conv main.cpp imgutil.cpp)
