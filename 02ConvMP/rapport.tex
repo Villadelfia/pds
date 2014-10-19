@@ -1,0 +1,103 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[dutch]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox} 
+\usepackage{siunitx}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{lipsum}
+\usepackage[fixlanguage]{babelbib}
+\usepackage{todonotes}
+\usepackage{moreverb}
+\usepackage{tabu}
+\usepackage{mathtools}
+\usepackage[font=small,format=plain,labelfont=bf,up,textfont=it,up]{caption}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage{parskip}
+\usepackage{pdfpages}
+\usepackage{rotating}
+\usepackage{enumitem}
+\usepackage{a4wide}
+\newcommand*{\bfrac}[2]{\genfrac{\lbrace}{\rbrace}{0pt}{}{#1}{#2}}
+\everymath={\displaystyle}
+\renewcommand{\figureautorefname}{Figuur}
+\renewcommand{\tableautorefname}{Tabel}
+\renewcommand{\partautorefname}{Deel}
+\renewcommand{\appendixautorefname}{Appendix}
+\renewcommand{\partautorefname}{Vergelijking}
+\renewcommand{\Itemautorefname}{punt}
+\renewcommand{\chapterautorefname}{Hoofdstuk}
+\renewcommand{\sectionautorefname}{Sectie}
+\renewcommand{\subsectionautorefname}{Sectie}
+\renewcommand{\subsubsectionautorefname}{Sectie}
+\renewcommand{\paragraphautorefname}{paragraaf}
+\renewcommand{\Hfootnoteautorefname}{noot}
+\renewcommand{\AMSautorefname}{Vergelijking}
+\renewcommand{\theoremautorefname}{Stelling}
+\renewcommand{\pageautorefname}{pagina}
+
+% Symbolic alias stuff
+\def\Ref#1{\hyperref[#1]{[#1]}}
+\def\Section#1#2{\section[#1]{#1~\linebreak[3]
+    \hfill{\texttt{\normalsize\Ref{#2}}}}\label{#2}}
+\def\Item#1{\item[\texttt{\Ref{#1}}]\label{#1}\hfill\\}
+
+\interfootnotelinepenalty=10000
+\setlist[enumerate]{itemsep=0mm}
+
+\begin{document}
+\author{Randy Thiemann} 
+\title{PDS \\ OpenMP Convolutie} 
+\date{\today}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Aanpak}
+Ik heb voor de implementatie twee plaatsen gevonden om multi-threading toe te
+passen. 
+
+\begin{itemize}
+    \item In de binnenste for loops waar de hadamar operatie van de afbeelding 
+        en de kernel wordt uitgevoerd.
+    \item In de buitenste for loops waar de convolutiefunctie wordt aangeroepen.
+\end{itemize}
+
+Voor het programma te testen op het VSC, heb ik beide methodes op mijn
+persoonlijke computer getest. Hier uit is gebleken dat de eerste methode veel
+minder effectief is dan de tweede methode, de eerste methode is 4 tot 5 keer 
+trager afhankelijk van de scheduler, en dat als we deze combineren de code
+zelfs trager draait dan zonder enige OpenMP optimizatie.
+
+Ik heb dus besloten enkel de tweede methode toe te passen. Op mijn computer, met
+een 7216x5412 afbeelding en een 31x31 kernel, duurt het gemiddeld 44 seconden op
+zowel static, dynamic als guided scheduling.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Resultaten}
+Op het VSC heb ik met dezelfde afbeelding en kernel 10 runs gedaan met drie
+verschillende schedulers: static, dynamic en guided. De resultaten zijn als
+volgt:
+
+De dynamische runtimes in seconden waren: 14.46, 14.60, 14.53, 14.47, 15.95, 
+14.58, 14.52, 15.81, 14.52 en 15.15. Dit geeft een gemiddelde runtime van 14.86
+seconden en een standaardafwijking van 0.575 seconden.
+
+De statische runtimes in seconden waren: 14.97, 14.45, 14.47, 14.98, 14.45, 
+14.47, 15.09, 15.09, 14.97 en 16.84. Dit geeft een gemiddelde runtime van 14.98
+seconden en een standaardafwijking van 0.712 seconden.
+
+De guided runtimes in seconden waren: 14.63, 14.43, 14.43, 14.46, 15.67, 15.88, 
+14.45, 15.84, 14.99 en 16.48. Dit geeft een gemiddelde runtime van 15.13 
+seconden en een standaardafwijking van 0.77 seconden.
+
+Het valt hier op dat dynamische scheduling gemiddeld sneller gaat, en dat deze
+de kleinste standaardafwijking heeft. Voor deze specifieke implementatie is
+dynamische scheduling dus veruit de beste.
+\end{document}
