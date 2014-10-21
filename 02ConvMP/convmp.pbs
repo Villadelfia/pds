@@ -32,17 +32,17 @@
 PBS_O_WORKDIR=${PBS_O_WORKDIR:='.'}
 cd $PBS_O_WORKDIR
 export OMP_SCHEDULE="dynamic"
-#echo "Generating one of each input/kernel combination..."
-#for kernel in data/kernel/*.png; do
-#    export KERNELNAME=$(basename ${kernel})
-#    export SETTINGS=$(cat data/kernel/params.txt | grep ${KERNELNAME})
-#    export SETTINGS=(${SETTINGS//\ / })
-#    for input in data/input/*; do
-#        ./build/conv ${input} ${kernel} ${SETTINGS[1]} ${SETTINGS[2]}\
-#            output/$(basename ${input} .png)-$(basename ${kernel} .png).png
-#    done
-#done
-#echo "-----GENERATING DONE-----"
+echo "Generating one of each input/kernel combination..."
+for kernel in data/kernel/*.png; do
+   export KERNELNAME=$(basename ${kernel})
+   export SETTINGS=$(cat data/kernel/params.txt | grep ${KERNELNAME})
+   export SETTINGS=(${SETTINGS//\ / })
+   for input in data/input/*; do
+       ./build/conv ${input} ${kernel} ${SETTINGS[1]} ${SETTINGS[2]}\
+           output/$(basename ${input} .png)-$(basename ${kernel} .png).png
+   done
+done
+echo "-----GENERATING DONE-----"
 
 echo "Starting the benchmark"
 echo "Running conv 10 times on a 31x31 kernel on big_building.png on every scheduler."
