@@ -5,17 +5,17 @@
 #include <string>
 #include "imgutil.h"
 
-inline float convolve(float* input, int inputw, int pad, float* kernel,
-                      int kernelw, int x, int y) {
-    x += pad;
-    y += pad;
-    inputw += 2 * pad;
+inline float convolve(float* input, int inputw, int padw, int padh,
+                      float* kernel, int kernelw, int x, int y) {
+    x += padw;
+    y += padh;
+    inputw += 2 * padw;
     float result = 0;
 
-    for(int i = x - pad; i <= x + pad; ++i) {
-        for(int j = y - pad; j <= y + pad; ++j) {
+    for(int i = x - padw; i <= x + padw; ++i) {
+        for(int j = y - padh; j <= y + padh; ++j) {
             result +=
-                kernel[(i - x + pad) + ((j - y + pad) * kernelw)] *
+                kernel[(i - x + padw) + ((j - y + padh) * kernelw)] *
                 input[i + j * inputw];
         }
     }
@@ -53,14 +53,15 @@ int main(int argc, char** argv) {
 
     //**************************************************************************
     // Pad.
-    int padamt = kernelw / 2;
-    size_t size = (inputw + (2 * padamt)) * (inputh + (2 * padamt));
+    int padw = kernelw / 2;
+    int padh = kernelh / 2;
+    size_t size = (inputw + (2 * padw)) * (inputh + (2 * padh));
     float* paddedinput = new float[size];
     std::fill_n(paddedinput, size, 0);
 
     #pragma omp parallel for
     for(int i = 0; i < inputh; ++i) {
-        int paddedoffset = (padamt + i) * (inputw + 2 * padamt) + padamt;
+        int paddedoffset = (padh + i) * (inputw + 2 * padw) + padw;
         std::copy_n(input + (i * inputw), inputw, paddedinput + (paddedoffset));
     }
 
@@ -73,8 +74,9 @@ int main(int argc, char** argv) {
     #pragma omp parallel for schedule(runtime)
     for(int x = 0; x < inputw; ++x) {
         for(int y = 0; y < inputh; ++y) {
-            output[y * inputw + x] = convolve(paddedinput, inputw, padamt,
-                                              kernel, kernelw, x, y);
+            output[y * inputw + x] = convolve(paddedinput, inputw, padw,
+                                              padh, kernel, kernelw, x,
+                                              y);
         }
     }
 
