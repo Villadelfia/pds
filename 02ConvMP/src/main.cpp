@@ -34,8 +34,8 @@ int main(int argc, char** argv) {
 
     std::string inputFile = argv[1];
     std::string kernelFile = argv[2];
-    double offset = std::atof(argv[3]);
-    double scale = std::atof(argv[4]);
+    float offset = std::atof(argv[3]);
+    float scale = std::atof(argv[4]);
     std::string outputFile = argv[5];
 
     std::cout << "Convolving " << inputFile << " with kernel " << kernelFile <<

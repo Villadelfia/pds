@@ -49,8 +49,8 @@ void imgutil::saveImageData(const float* pValues, int w, int h,
     img.save(fileName.c_str());
 }
 
-void imgutil::kernelNorm(float* kernel, int w, int h, double scale,
-                         double offset) {
+void imgutil::kernelNorm(float* kernel, int w, int h, float scale,
+                         float offset) {
     if(scale == 0) {
         for(int y = 0 ; y < h ; y++) {
             for(int x = 0 ; x < w ; x++)
