@@ -5,24 +5,6 @@
 #include <string>
 #include "imgutil.h"
 
-inline float convolve(float* input, int inputw, int padw, int padh,
-                      float* kernel, int kernelw, int x, int y) {
-    x += padw;
-    y += padh;
-    inputw += 2 * padw;
-    float result = 0;
-
-    for(int i = x - padw; i <= x + padw; ++i) {
-        for(int j = y - padh; j <= y + padh; ++j) {
-            result +=
-                kernel[(i - x + padw) + ((j - y + padh) * kernelw)] *
-                input[i + j * inputw];
-        }
-    }
-
-    return result;
-}
-
 int main(int argc, char** argv) {
     //**************************************************************************
     // Argument parsing.
@@ -70,13 +52,20 @@ int main(int argc, char** argv) {
     //**************************************************************************
     // Convolve.
     float* output = new float[inputw * inputh];
+    int outputw = inputw + (2 * padw);
 
     #pragma omp parallel for schedule(runtime)
     for(int x = 0; x < inputw; ++x) {
         for(int y = 0; y < inputh; ++y) {
-            output[y * inputw + x] = convolve(paddedinput, inputw, padw,
-                                              padh, kernel, kernelw, x,
-                                              y);
+            float result = 0;
+            for(int i = 0; i < kernelw; ++i) {
+                for(int j = 0; j < kernelh; ++j) {
+                    result +=
+                        kernel[i + j * kernelw] *
+                        paddedinput[(i + x) + (j + y) * outputw];
+                }
+            }
+            output[y * inputw + x] = result;
         }
     }
 
