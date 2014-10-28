@@ -18,7 +18,6 @@ imgdata imgutil::getImageData(const std::string& fileName) {
     int h = img.height();
     float* pValues = new float[w * h];
 
-    #pragma omp parallel for
     for(int y = 0 ; y < h ; y++) {
         for(int x = 0 ; x < w ; x++) {
             QRgb pixel = img.pixel(x, y);
@@ -34,7 +33,6 @@ void imgutil::saveImageData(const float* pValues, int w, int h,
                             const std::string& fileName) {
     QImage img(w, h, QImage::Format_RGB32);
 
-    #pragma omp parallel for
     for(int y = 0 ; y < h ; y++) {
         for(int x = 0 ; x < w ; x++) {
             int value = (int)pValues[x + y * w];
