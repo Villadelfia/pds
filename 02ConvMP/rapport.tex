@@ -82,22 +82,25 @@ zowel static, dynamic als guided scheduling.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Resultaten}
 Op het VSC heb ik met dezelfde afbeelding en kernel 10 runs gedaan met drie
-verschillende schedulers: static, dynamic en guided. De resultaten zijn als
-volgt:
+verschillende schedulers: static, dynamic en guided. Deze test werd herhaald met 
+1, 2, 4, 8, 16 en 20 cores. De gemiddelden en standaardafwijkingen zijn te
+vinden in onderstaande grafieken.
 
-De dynamische runtimes in seconden waren: 14.46, 14.60, 14.53, 14.47, 15.95, 
-14.58, 14.52, 15.81, 14.52 en 15.15. Dit geeft een gemiddelde runtime van 14.86
-seconden en een standaardafwijking van 0.575 seconden.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{average}
+\end{figure}
 
-De statische runtimes in seconden waren: 14.97, 14.45, 14.47, 14.98, 14.45, 
-14.47, 15.09, 15.09, 14.97 en 16.84. Dit geeft een gemiddelde runtime van 14.98
-seconden en een standaardafwijking van 0.712 seconden.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{stdev}
+\end{figure}
 
-De guided runtimes in seconden waren: 14.63, 14.43, 14.43, 14.46, 15.67, 15.88, 
-14.45, 15.84, 14.99 en 16.48. Dit geeft een gemiddelde runtime van 15.13 
-seconden en een standaardafwijking van 0.77 seconden.
+Hieruit blijkt dat tot 4 cores, op het vsc, guided de beste gemiddelde runtime
+geeft. Dan is voor 8 en 16 cores static het beste, eindigend met dynamic op
+20 cores. De algemene trend is wel zoals verwacht.
 
-Het valt hier op dat dynamische scheduling gemiddeld sneller gaat, en dat deze
-de kleinste standaardafwijking heeft. Voor deze specifieke implementatie is
-dynamische scheduling dus veruit de beste.
+In de standaardafwijkingen is over het algemeen de methode met het laagste
+gemiddelde ook deze met de laagste standaardafwijking.
+
 \end{document}
